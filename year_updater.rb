@@ -4,10 +4,10 @@ require 'mysql2'
 require 'rspotify'
 
 def options
-  { host: ENV['SQUIRREL_WIN7_HOST'],
-    username: ENV['SQUIRREL_WIN7_USER'],
-    password: ENV['SQUIRREL_WIN7_PWD'],
-    database: ENV['SQUIRREL_WIN7_DB'] }
+  { host: ENV['SONGS_DB_HOSTNAME'],
+    username: ENV['SONGS_DB_USER'],
+    password: ENV['SONGS_DB_PWD'],
+    database: ENV['SONGS_DB_NAME'] }
 end
 
 def client
@@ -29,7 +29,7 @@ def update_song(id, artist, title)
   @artist = artist
   @title = title
   @earliest_year = 3000
-  update_year(artist, title)
+  update_year(id, artist, title)
 end
 
 def songlist(list = [])
@@ -49,7 +49,7 @@ def show_options(results)
     puts "#{index}) [#{year}] #{artist} - #{title} [#{album}]"
   end
 
-  print "\n#{artist} - #{title} [#{earliest_year}] " \
+  print "\nEnter year: [#{@earliest_year}] " \
         'or n) (q=quit) => '
 end
 
@@ -98,7 +98,7 @@ def filename
   'not_found.txt'
 end
 
-def update_year(artist, title)
+def update_year(id, artist, title)
   year = lookup_year(artist, title)
   return unless year
   system 'clear'
